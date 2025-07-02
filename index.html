@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Perfect Drag Scroll Music Cards</title>
+    <style>
+      body {
+        margin: 0;
+        background: #f5f5f5;
+        padding: 40px;
+        display: flex;
+        justify-content: center;
+        font-family: sans-serif;
+      }
+
+      iframe {
+        width: 100%;
+        max-width: 620px;
+        height: 750px;
+        border: 2px solid #ccc;
+        border-radius: 10px;
+        /* box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1); */
+      }
+    </style>
+  </head>
+  <body>
+    <iframe
+      srcdoc='
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: sans-serif; padding: 20px; color: #333; background: white; }
+    .category { margin-bottom: 30px; }
+    .category h2 {
+      font-size: 22px;
+      margin-bottom: 15px;
+      padding-left: 5px;
+    }
+
+    .scroll-container {
+      display: flex;
+      gap: 16px;
+      overflow-x: auto;
+      scroll-snap-type: x mandatory;
+      scroll-behavior: smooth;
+      user-select: none;
+      cursor: grab;
+      padding-bottom: 10px;
+    }
+    .scroll-container:active {
+      cursor: grabbing;
+    }
+
+    .scroll-container::-webkit-scrollbar {
+      display: none;
+    }
+
+    .card {
+      flex: 0 0 auto;
+      scroll-snap-align: start;
+      background: #f0f0f0;
+      border-radius: 5px;
+      width: 240px;
+      box-shadow: 0 0px 8px rgba(0,0,0,0.1);
+      overflow: hidden;
+    }
+    .card img {
+      width: 100%;
+      height: 140px;
+      object-fit: cover;
+      pointer-events: none;
+    }
+    .info {
+      padding: 10px;
+    }
+    .title {
+      font-size: 16px;
+      font-weight: bold;
+      margin-bottom: 4px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .channel {
+      font-size: 13px;
+      color: #666;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .featured h2 { font-size: 24px; }
+    .featured .card {
+      width: 380px;
+    }
+    .featured .card img {
+      height: 280px;
+    }
+    .featured .title {
+      font-size: 18px;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="category featured">
+    <h2>Featured</h2>
+    <div class="scroll-container" id="featuredScroll">
+      <div class="card">
+        <img src="https://i.ytimg.com/vi/oygrmJFKYZY/hqdefault.jpg" />
+        <div class="info"><div class="title">Don’t Start Now</div><div class="channel">Dua Lipa</div></div>
+      </div>
+      <div class="card">
+        <img src="https://i.ytimg.com/vi/4NRXx6U8ABQ/hqdefault.jpg" />
+        <div class="info"><div class="title">Blinding Lights</div><div class="channel">The Weeknd</div></div>
+      </div>
+      <div class="card">
+        <img src="https://i.ytimg.com/vi/E07s5ZYygMg/hqdefault.jpg" />
+        <div class="info"><div class="title">Watermelon Sugar</div><div class="channel">Harry Styles</div></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="category">
+    <h2>Recommended</h2>
+    <div class="scroll-container" id="recommendedScroll">
+      <div class="card">
+        <img src="https://i.ytimg.com/vi/sample1/hqdefault.jpg" />
+        <div class="info"><div class="title">Ocean Dreams</div><div class="channel">Chill Wave</div></div>
+      </div>
+      <div class="card">
+        <img src="https://i.ytimg.com/vi/sample2/hqdefault.jpg" />
+        <div class="info"><div class="title">Evening Chill</div><div class="channel">Elva Sanchez</div></div>
+      </div>
+      <div class="card">
+        <img src="https://i.ytimg.com/vi/sample3/hqdefault.jpg" />
+        <div class="info"><div class="title">Lofi Summer</div><div class="channel">LoFi World</div></div>
+      </div>
+    </div>
+  </div>
+
+<script>
+  document.querySelectorAll(".scroll-container").forEach(container => {
+    let isDown = false;
+    let startX;
+    let scrollLeft;
+
+    container.addEventListener("mousedown", (e) => {
+      isDown = true;
+      container.classList.add("dragging");
+      startX = e.pageX - container.offsetLeft;
+      scrollLeft = container.scrollLeft;
+    });
+
+    container.addEventListener("mouseleave", () => {
+      isDown = false;
+      container.classList.remove("dragging");
+    });
+
+    container.addEventListener("mouseup", () => {
+      isDown = false;
+      container.classList.remove("dragging");
+    });
+
+    container.addEventListener("mousemove", (e) => {
+      if (!isDown) return;
+      e.preventDefault();
+      const x = e.pageX - container.offsetLeft;
+      const walk = (x - startX);
+      container.scrollLeft = scrollLeft - walk;
+    });
+  });
+</script>
+
+</body>
+</html>'
+      loading="lazy"
+    ></iframe>
+  </body>
+</html>
