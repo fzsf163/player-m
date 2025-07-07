@@ -1,0 +1,308 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>YouTube Video Player with Hover Overlay</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            background: linear-gradient(135deg, #1a2a6c, #b21f1f, #fdbb2d);
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 900px;
+            width: 100%;
+            text-align: center;
+        }
+        
+        h1 {
+            color: white;
+            margin-bottom: 30px;
+            font-size: 2.5rem;
+            text-shadow: 0 2px 8px rgba(0,0,0,0.3);
+        }
+        
+        .player-container {
+            position: relative;
+            width: 100%;
+            padding-top: 56.25%; /* 16:9 Aspect Ratio */
+            border-radius: 16px;
+            overflow: hidden;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.4);
+            background: #000;
+            cursor: pointer;
+        }
+        
+        .video-iframe {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            border: none;
+        }
+        
+        .overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, rgba(0,0,0,0.7), rgba(0,0,0,0.8));
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 40px;
+            transition: opacity 0.5s ease;
+            opacity: 1;
+            z-index: 10;
+            pointer-events: none;
+        }
+        
+        .overlay.hidden {
+            opacity: 0;
+        }
+        
+        .play-btn {
+            width: 90px;
+            height: 90px;
+            background: #ff0000;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-bottom: 30px;
+            transition: transform 0.3s, box-shadow 0.3s;
+            box-shadow: 0 0 30px rgba(255,0,0,0.7);
+            pointer-events: auto;
+        }
+        
+        .play-btn:hover {
+            transform: scale(1.1);
+            box-shadow: 0 0 40px rgba(255,0,0,0.9);
+        }
+        
+        .play-btn i {
+            color: white;
+            font-size: 36px;
+            margin-left: 8px;
+        }
+        
+        .video-title {
+            color: white;
+            font-size: 2.2rem;
+            margin-bottom: 15px;
+            font-weight: 700;
+            text-shadow: 0 2px 10px rgba(0,0,0,0.5);
+        }
+        
+        .video-description {
+            color: rgba(255,255,255,0.85);
+            font-size: 1.1rem;
+            max-width: 700px;
+            line-height: 1.6;
+            margin-bottom: 20px;
+        }
+        
+        .video-meta {
+            display: flex;
+            gap: 20px;
+            margin-top: 15px;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+        
+        .meta-item {
+            display: flex;
+            align-items: center;
+            color: rgba(255,255,255,0.8);
+            font-size: 1rem;
+            background: rgba(255,255,255,0.1);
+            padding: 8px 16px;
+            border-radius: 50px;
+        }
+        
+        .meta-item i {
+            margin-right: 8px;
+            color: #ff0000;
+        }
+        
+        .hover-overlay {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            background: linear-gradient(to top, rgba(0,0,0,0.8), transparent);
+            padding: 30px 20px 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+            opacity: 0;
+            transform: translateY(20px);
+            transition: all 0.4s ease;
+            z-index: 5;
+            pointer-events: none;
+        }
+        
+        .player-container:hover .hover-overlay {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        
+        .hover-title {
+            color: white;
+            font-size: 1.4rem;
+            font-weight: 600;
+            margin-bottom: 8px;
+        }
+        
+        .hover-description {
+            color: rgba(255,255,255,0.8);
+            font-size: 0.95rem;
+            max-width: 700px;
+            line-height: 1.5;
+        }
+        
+        .instructions {
+            color: rgba(255,255,255,0.8);
+            margin-top: 30px;
+            font-size: 1.1rem;
+            max-width: 800px;
+            margin-left: auto;
+            margin-right: auto;
+            background: rgba(0,0,0,0.3);
+            padding: 15px 20px;
+            border-radius: 12px;
+            line-height: 1.6;
+        }
+        
+        .instructions strong {
+            color: #fff;
+        }
+        
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 2rem;
+            }
+            
+            .video-title {
+                font-size: 1.8rem;
+            }
+            
+            .play-btn {
+                width: 70px;
+                height: 70px;
+            }
+            
+            .video-description {
+                font-size: 1rem;
+            }
+            
+            .hover-title {
+                font-size: 1.2rem;
+            }
+            
+            .hover-description {
+                font-size: 0.85rem;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            h1 {
+                font-size: 1.6rem;
+            }
+            
+            .video-title {
+                font-size: 1.4rem;
+            }
+            
+            .video-description {
+                font-size: 0.9rem;
+            }
+            
+            .meta-item {
+                font-size: 0.9rem;
+                padding: 6px 12px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="player-container" id="playerContainer">
+            <iframe class="video-iframe" src="https://www.youtube.com/embed/dQw4w9WgXcQ?rel=0" allowfullscreen></iframe>     
+            <div class="overlay" id="overlay">
+                <div class="play-btn" id="playBtn">
+                    <i class="fas fa-play"></i>
+                </div>
+                <h2 class="video-title">Nature's Wonders: A Visual Journey</h2>
+                <p class="video-description">
+                    Immerse yourself in the breathtaking beauty of our planet. This stunning documentary takes you on a journey through majestic mountains, vibrant coral reefs, and lush rainforests.
+                </p>
+                <div class="video-meta">
+                    <div class="meta-item">
+                        <i class="fas fa-clock"></i> 22:15 min
+                    </div>
+                    <div class="meta-item">
+                        <i class="fas fa-eye"></i> 1.8M views
+                    </div>
+                    <div class="meta-item">
+                        <i class="fas fa-calendar"></i> June 10, 2023
+                    </div>
+                </div>
+            </div>
+            
+            <div class="hover-overlay">
+                <h3 class="hover-title">Nature's Wonders: A Visual Journey</h3>
+                <p class="hover-description">
+                    Explore Earth's most spectacular landscapes and ecosystems in this award-winning documentary.
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const overlay = document.getElementById('overlay');
+            const playBtn = document.getElementById('playBtn');
+            const iframe = document.querySelector('.video-iframe');
+            const playerContainer = document.getElementById('playerContainer');
+            
+            // Original video URL without autoplay
+            const videoUrl = iframe.src;
+            
+            // Play button click handler
+            playBtn.addEventListener('click', function() {
+                // Add autoplay parameter to the iframe URL
+                iframe.src = videoUrl + '&autoplay=1';
+                overlay.classList.add('hidden');
+            });
+            
+            // Show overlay when video is paused
+            playerContainer.addEventListener('mouseenter', function() {
+                // Check if the overlay is currently hidden (video playing)
+                if (overlay.classList.contains('hidden')) {
+                    // Show the hover overlay by default
+                } else {
+                    // If video not started, ensure the main overlay is visible
+                    overlay.classList.remove('hidden');
+                }
+            });
+        });
+    </script>
+</body>
+</html>
